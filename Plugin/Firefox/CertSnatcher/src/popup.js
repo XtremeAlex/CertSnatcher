@@ -43,6 +43,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     document.getElementById("button2").addEventListener("click", function() {
         inviaRichiestaPerCertificato("JKS", document.getElementById("terminal").textContent, handleError);
+        document.getElementById("info").textContent = "password:[certsnatcher]"
     });
 });
 
