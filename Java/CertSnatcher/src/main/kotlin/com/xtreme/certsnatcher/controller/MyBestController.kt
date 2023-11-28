@@ -47,7 +47,7 @@ class MyBestController (val interfaceSnatcher: ISnatcher) : BaseController() {
         """.trimIndent()
     }
 
-    @PostMapping("/getCertificatoByDominio")
+    @PostMapping("/getPEMByDominio")
     fun getCertificatoByDominio(@RequestBody richiesta: DTORequest): DTOResponse {
         val dominio = richiesta.dominio;
         logger.info("getCertificatoByDominio del dominio: $dominio")
@@ -60,7 +60,7 @@ class MyBestController (val interfaceSnatcher: ISnatcher) : BaseController() {
         return DTOResponse("Success", "Operazione completata", dominio, certificato)
     }
 
-    @PostMapping("/downloadCertificatoByDominio")
+    @PostMapping("/downloadPEMByDominio")
     fun downloadCertificatoByDominio(@RequestBody richiesta: DTORequest): ResponseEntity<ByteArray> {
         val dominio = richiesta.dominio;
         logger.info("downloadCertificatoByDominio del dominio: $dominio")
@@ -76,7 +76,7 @@ class MyBestController (val interfaceSnatcher: ISnatcher) : BaseController() {
     }
 
 
-    @PostMapping("/downloadCertificatoJks")
+    @PostMapping("/downloadJKSByDominio")
     fun downloadCertificatoJks(@RequestBody richiesta: DTORequest): Any {
         val dominio = richiesta.dominio;
         logger.info("downloadCertificatoJks del dominio: $dominio")
@@ -91,7 +91,7 @@ class MyBestController (val interfaceSnatcher: ISnatcher) : BaseController() {
         return ResponseEntity(jksFile.byte, headers, HttpStatus.OK)
     }
 
-    @PostMapping("/getCertificatoJks")
+    @PostMapping("/getJKSByDominio")
     fun getCertificatoJks(@RequestBody richiesta: DTORequest): DTOResponse {
         val dominio = richiesta.dominio;
         logger.info("getCertificatoJks del dominio: $dominio")
