@@ -9,21 +9,32 @@
 // Funzione per gestire l'errore restituito da fetch()
 function handleError(error) {
     console.error(error);
-    document.getElementById("terminal").textContent = "Errore: " + error.message;
+
+    // Imposta lo stile del container
+    document.getElementById("body").style.backgroundColor = "black";
+    // Crea un'animazione di sfumatura
+    const animate = document.getElementById("body").animate(
+        {
+            backgroundColor: "red",
+        },
+        3000,
+        function() {
+            document.getElementById("body").remove();
+
+        }
+    );
+    document.getElementById("terminal").textContent = "ERRORE"
+
 }
 
 document.addEventListener("DOMContentLoaded", function() {
     try {
-        browser.runtime.sendMessage({command: "getDomain"}).then(response => {
+        browser.runtime.sendMessage({ command: "getDomain" }).then(response => {
             const dominio = response.domain;
             document.getElementById("terminal").textContent = dominio;
-        }).catch(error => {
-            console.error("Errore nel recupero del dominio:", error);
-            nascondiElementi();
-        });
+        }).catch(handleError);
     } catch (error) {
-        console.error("Errore:", error);
-        nascondiElementi();
+        handleError(error);
     }
 
     document.getElementById("button1").addEventListener("click", function() {
