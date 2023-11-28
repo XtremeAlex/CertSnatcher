@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Firefox tab CertSnatcher",
   "description": "Capture the cert by URL",
-  "version": "1.0",
+  "version": "1.1",
   "icons": {
     "64": "icons/cert.png"
   },

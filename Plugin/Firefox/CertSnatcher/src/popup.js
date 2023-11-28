@@ -1,72 +1,53 @@
 /**
- * Dato che non possiamo ottenere direttamente il certificato SSL/TLS tramite l'API WebExtensions
- * ho pensato che potremmo procedere come segue:
+ * Poiché non possiamo ottenere direttamente il certificato SSL/TLS tramite l'API WebExtensions,
+ * ho pensato di procedere nel seguente modo:
+ * 1. Recuperare il nome di dominio della scheda corrente
+ * 2. Inviare una richiesta POST al servizio `certsnatcher-ms` per ottenere il certificato PEM o JKS
+ * 3. Salvare il certificato nel formato .pem e .jks
  */
+document.getElementById("button1").addEventListener("click", function() {
+    browser.runtime.sendMessage({command: "saveFilePEM"});
 
-document.getElementById("button1").addEventListener("click", async function () {
-
-     // Invia un messaggio allo script di background per ottenere il certificato
-     browser.runtime.sendMessage({command: "getCertificate"}).then(response => {
-         console.log("Certificato:", response.certificate);
-     }).catch(error => {
-         console.error("Errore nel recupero del certificato:", error);
-     });
-
-    //const url = "https://example.com";
-
-    // Richiedi il certificato del server
-    const certificate = await browser.webNavigation.getCertificate(url, {
-        server: true,
-    });
-
-    // Salva il certificato in un file
-    fs.writeFileSync("certificate.pem", certificate);
+    try {
+        browser.runtime.sendMessage({command: "getDomain"}).then(response => {
+            const dominio = response.domain;
+            document.getElementById("terminal").textContent = dominio;
+            inviaRichiestaPerCertificatoPEM(dominio);
+        }).catch(error => {
+            console.error("Errore nel recupero del dominio:", error);
+            nascondiElementi();
+        });
+    } catch (error) {
+        console.error("Errore:", error);
+        nascondiElementi();
+    }
 
 });
 
 document.getElementById("button2").addEventListener("click", function() {
-    browser.runtime.sendMessage({command: "action2"});
+    browser.runtime.sendMessage({command: "saveFileJKS"});
+
+    try {
+        browser.runtime.sendMessage({command: "getDomain"}).then(response => {
+            const dominio = response.domain;
+            document.getElementById("terminal").textContent = dominio;
+            inviaRichiestaPerCertificatoJKS(dominio);
+        }).catch(error => {
+            console.error("Errore nel recupero del dominio:", error);
+            nascondiElementi();
+        });
+    } catch (error) {
+        console.error("Errore:", error);
+        nascondiElementi();
+    }
 });
-
-document.getElementById("button3").addEventListener("click", function() {
-    browser.runtime.sendMessage({command: "action3"});
-});
-
-
-document.getElementById("button4").addEventListener("click", function() {
-    browser.runtime.sendMessage({command: "action4"});
-});
-
-function salvaCertificato(certificateData, nomeCertificato) {
-    const blob = new Blob([certificateData], {type: 'application/x-pem-file'});
-    const url = URL.createObjectURL(blob);
-
-    browser.downloads.download({
-        url: url,
-        filename: `${nomeCertificato}.pem`,
-        saveAs: true // Opzionale: chiede all'utente dove salvare il file
-    }).then(id => {
-        console.log("Download iniziato:", id);
-    }).catch(error => {
-        console.error("Errore nel download:", error);
-    });
-}
-
-
-/*
-document.addEventListener("DOMContentLoaded", function() {
-    // Invia un messaggio allo script di background per richiedere il dominio
-    browser.runtime.sendMessage({command: "getDomain"}).then(response => {
-        // Imposta il testo del div #terminal con il dominio ricevuto
-        document.getElementById("terminal").textContent = response.domain;
-    });
-});
-*/
 
 document.addEventListener("DOMContentLoaded", function() {
     try {
         browser.runtime.sendMessage({command: "getDomain"}).then(response => {
-            document.getElementById("terminal").textContent = response.domain;
+            const dominio = response.domain;
+            document.getElementById("terminal").textContent = dominio;
+            //inviaRichiestaPerCertificato(dominio);
         }).catch(error => {
             console.error("Errore nel recupero del dominio:", error);
             nascondiElementi();
@@ -84,3 +65,50 @@ function nascondiElementi() {
     document.querySelector("h4").style.display = 'none';
 }
 
+function inviaRichiestaPerCertificatoPEM(dominio) {
+    fetch('http://localhost:8080/certsnatcher-ms/getCertificatoByDominio', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ dominio: dominio })
+    })
+        .then(response => response.json())
+        .then(data => {
+            salvaCertificato(data.certificato);
+        })
+        .catch(error => console.error('Errore durante il salvataggio del certificato:', error));
+}
+
+function salvaCertificato(certificato) {
+    const link = document.createElement('a');
+    link.href = 'data:application/x-pem-file;base64,' + certificato.byte;
+    link.download = `${certificato.nome}.pem`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+function inviaRichiestaPerCertificatoJKS(dominio) {
+    fetch('http://localhost:8080/certsnatcher-ms/getCertificatoJks', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ dominio: dominio })
+    })
+        .then(response => response.json())
+        .then(data => {
+            salvaCertificatoJKS(data.certificato);
+        })
+        .catch(error => console.error('Errore durante il salvataggio del certificato:', error));
+}
+
+function salvaCertificatoJKS(certificato) {
+    const link = document.createElement('a');
+    link.href = 'data:application/octet-stream;base64,' + certificato.byte;
+    link.download = `${certificato.nome}.jks`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
