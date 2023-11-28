@@ -1,0 +1,67 @@
+body {
+    font-family: 'Courier New', Courier, monospace;
+    background-color: #000;  /*#c0c0c0;*/
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    color: #1fb4da;
+}
+
+#container {
+    text-align: center;
+}
+
+#terminal {
+    background-color: #000;
+    color: #0f0;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-family: 'Courier New', monospace;
+    border-radius: 4px;
+}
+
+#image-container img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+    margin-bottom: 20px;
+}
+
+#image-container img:hover {
+    transform: scale(1.1);
+}
+
+button {
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: left;
+    text-decoration: none;
+    display: block;
+    font-size: 16px;
+    margin: 4px auto;
+    cursor: pointer;
+    border-radius: 4px;
+    box-shadow: 2px 2px 5px grey;
+    width: 100%;
+    transition: background-color 0.2s; /* Transizione fluida dello sfondo */
+}
+
+button:hover {
+    background-color: #0a4150;
+}
+
+button {
+    /* Stili del bottone qui (colore, padding, margin, ecc.) */
+    transition: transform 0.1s ease; /* Transizione per l'effetto di click */
+}
+
+button:active {
+    transform: scale(0.95); /* Riduce leggermente la scala del bottone quando è cliccato */
+}
+
+button:active {
+    background-color: #1fb4da; /* Colore di sfondo più chiaro durante il click */
+}
