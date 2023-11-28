@@ -1,0 +1,42 @@
+{
+  "manifest_version": 2,
+  "name": "Firefox tab CertSnatcher",
+  "description": "Capture the cert by URL",
+  "version": "1.0",
+  "icons": {
+    "64": "icons/cert.png"
+  },
+  "permissions": [
+    "activeTab",
+    "<all_urls>",
+    "webRequest",
+    "tabs",
+    "downloads"
+  ],
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "browser_action": {
+    "default_title": "Cert Snatcher",
+    "default_popup": "popup.html",
+    "default_icon": "icons/cert.png"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "xtremealex@exemple.it"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "background.js"
+      ],
+      "css": [
+        "style.css"
+      ]
+    }
+  ]
+}
