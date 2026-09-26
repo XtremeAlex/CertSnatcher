@@ -63,3 +63,5 @@ build/
 ### NO LOG ###
 logs/
 var/
+
+.DS_Store
