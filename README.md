@@ -9,7 +9,7 @@ un'estensione browser e un backend che ne gestisce l'elaborazione.
 - `Java/CertSnatcher/` — backend Spring Boot in Kotlin (API, DTO, mapper) per ricevere ed elaborare i certificati
 - `Bash/` — script di supporto
 
-## Stack
+## Stack tecnologico
 
 - Estensione: JavaScript (WebExtension API)
 - Backend: Kotlin, Spring Boot, Maven
@@ -29,8 +29,8 @@ Caricala come estensione temporanea da `about:debugging` puntando al
 
 ## License
 
-Vedi `LICENSE`.
+Distribuito sotto licenza Apache 2.0. Vedi [`LICENSE`](LICENSE).
 
 ## Contatti
 
-Andrei Alexandru Dabija — [github.com/XtremeAlex](https://github.com/XtremeAlex)
+Andrei Alexandru Dabija — [LinkedIn](https://www.linkedin.com/in/andrei-alexandru-dabija/) — [github.com/XtremeAlex](https://github.com/XtremeAlex)
